@@ -4,7 +4,7 @@ import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
 import About from "./components/About";
 import { useState, useEffect } from "react"
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 const App = () => {
   const [showAddTask, setShowAddTask] = useState(true);
@@ -19,8 +19,7 @@ const App = () => {
   }, [])
   //Fetch Tasks
   const fetchTasks = async () => {
-    const res = await fetch
-      ('http://localhost:5000/tasks')
+    const res = await fetch('http://localhost:5000/tasks')
     const data = await res.json()
 
     return data
@@ -28,8 +27,7 @@ const App = () => {
 
   //Fetch Task
   const fetchTask = async (id) => {
-    const res = await fetch
-      (`http://localhost:5000/tasks/${id}`)
+    const res = await fetch(`http://localhost:5000/tasks/${id}`)
     const data = await res.json()
 
     return data
@@ -41,28 +39,22 @@ const App = () => {
     const res = await fetch('http://localhost:5000/tasks', {
       method: 'POST',
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
       },
-      body: JSON.stringify(task)
+      body: JSON.stringify(task),
     })
 
     const data = await res.json()
+
     setTasks([...tasks, data])
-
-
-    // const id = Math.floor(Math.random() * 10000) + 1
-    // const newTask = {id, ...task}
-    // setTasks([...tasks, newTask])
   }
 
 
   //Delete Task
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:5000/tasks/${id}`,
-      {
-        method: 'DELETE',
-      })
-
+    await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: 'DELETE',
+    })
 
     setTasks(tasks.filter((task) => task.id !== id))
   }
@@ -83,14 +75,13 @@ const App = () => {
     })
     const data = await res.json()
 
-
     setTasks(
       tasks.map((task) =>
-        task.id === id ? {
-          ...task, reminder:
-            !data.reminder
-        } : task))
+        task.id === id ? { ...task, reminder: data.reminder } : task
+      )
+    )
   }
+  
   return (
     <Router>
       <div className='container'>
@@ -98,6 +89,7 @@ const App = () => {
           onAdd={() => setShowAddTask(!showAddTask)}
           showAdd={showAddTask}
         />
+        <Routes>
           <Route
             path='/'
             element={
@@ -116,6 +108,7 @@ const App = () => {
             }
           />
           <Route path='/about' element={<About />} />
+        </Routes>
         <Footer />
       </div>
     </Router>
